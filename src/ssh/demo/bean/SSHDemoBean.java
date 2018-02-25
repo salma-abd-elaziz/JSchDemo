@@ -38,10 +38,10 @@ public class SSHDemoBean {
 			// Open the channel.
 			this.mSHHChannel = this.mSSHSession.openChannel("shell");
 
+			this.mSHHChannel.setOutputStream(System.out);
+			this.mSHHChannel.setInputStream(System.in);
 			this.mSHHChannel.connect();
 			
-			this.outputStream = this.mSHHChannel.getOutputStream();
-			this.inputStream = this.mSHHChannel.getInputStream();
 			res = true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -52,6 +52,7 @@ public class SSHDemoBean {
 	public boolean sendCommand(String command){
 		boolean res = false;
 		try {
+			this.outputStream = this.mSHHChannel.getOutputStream();
 			if (this.outputStream != null) {
 				// Send data.
 				this.outputStream.write(command.getBytes());
@@ -67,6 +68,7 @@ public class SSHDemoBean {
 	public String rcvdata(){
 		StringBuilder data = new StringBuilder();
 		try {
+			this.inputStream = this.mSHHChannel.getInputStream();
 			if (this.inputStream != null) {
 				int available = this.inputStream.available();
 				
